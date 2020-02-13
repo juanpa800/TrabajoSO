@@ -27,9 +27,15 @@
 					?>
 				</td>
 				<td>
+					<p>Crear Carpeta</p>
 					<form action="crud.php" method="post">
 						<input type="text" name="nombre" size="50">
-    				<input type="submit" name="create" value="Crear Carpeta">
+    				<input type="submit" name="createD" value="Crear Carpeta">
+					</form>
+					<p>Crear archivo</p>
+					<form action="crud.php" method="post">
+						<input type="text" name="nombre" size="50">
+    				<input type="submit" name="createA" value="Crear archivo">
 					</form>
 				</td>
 			</tr>
@@ -64,19 +70,19 @@
 	}
 
 	function ls(){
-		$ruta = (string)$_SESSION['ruta'];
-		exec("ls $ruta",$directorios);
-		foreach($directorios as $dir){
-			if(!is_file($dir)){
-					echo "<br><a href='test.php?dir=$dir'>$dir</a>\n";
-			}else{
-				echo "<br>$dir";
-			}
-
-		}
 		$nruta = dirname((string)$_SESSION['ruta']);
 		if($_SESSION['raiz'] != $nruta){
 			echo "<br><a href='test.php?dir=...'>...</a>\n";
 		}
+		$ruta = (string)$_SESSION['ruta'];
+		exec("ls $ruta -F | grep \/$",$directorios);
+		foreach($directorios as $dir){
+			echo "<br><a href='test.php?dir=$dir'>$dir</a>\n";
+		}
+		exec("ls $ruta -p | grep -v /",$archivos);
+		foreach($archivos as $arch){
+			echo "<br>".$arch;
+		}
+
 	}
 ?>
